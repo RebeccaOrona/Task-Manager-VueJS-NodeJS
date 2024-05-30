@@ -1,9 +1,11 @@
 <template>
   <v-container>
+    <!-- Botón para crear nueva tarea -->
     <v-btn color="success" @click="openCreateTaskForm">
       <v-icon left>mdi-plus</v-icon>
       Crear nueva tarea
     </v-btn>
+    <!-- Tabla de datos para listar tareas -->
     <v-data-table 
       :headers="headers" 
       :items="tasks" 
@@ -12,6 +14,7 @@
       :items-per-page="10"
       :footer-props="footerProps"
     >
+    <!-- Plantilla para el pie de la tabla -->
     <template v-slot:footer="{ props }">
         <div class="v-data-table-footer__items-per-page">
           <span>{{ itemsPerPageText }}</span>
@@ -22,7 +25,8 @@
             dense
             hide-details
           ></v-select>
-        </div>
+        </div> 
+        <!-- NO FUNCA -->
         <div class="v-data-table-footer__pagination">
           <span>{{ paginationText(props.pageStart, props.pageStop, props.itemsLength) }}</span>
           <v-pagination
@@ -33,6 +37,8 @@
           ></v-pagination>
         </div>
       </template>
+
+      <!-- Plantilla para los elementos de la tabla -->
       <template v-slot:item="{ item, index }">
         <tr :style="{ backgroundColor: taskColors[index] }">
           <td>{{ item.id }}</td>
@@ -49,12 +55,15 @@
           </td>
           <td :class="getDateClass(item.FechaCreacion)">{{ item.FechaCreacion }}</td>
           <td :class="getDateClass(item.FechaVencimiento)">{{ item.FechaVencimiento }}</td>
+          <!-- Botón para editar la tarea -->
           <td>
             <v-icon size="large" @click="selectTaskForEdit(item)">mdi-file-document-edit-outline</v-icon>
           </td>
+          <!-- Botón para eliminar la tarea -->
           <td>
             <v-icon size="large" color="error" @click="confirmDeleteTask(item.id)">mdi-delete</v-icon>
           </td>
+          <!-- Botón para ver el historial de estado de la tarea -->
           <td>
             <v-btn color="primary" @click="fetchStatusHistory(item.id)">
               <v-icon left>mdi-history</v-icon>
@@ -64,7 +73,7 @@
         </tr>
       </template>
     </v-data-table>
-    <!-- Status History Dialog -->
+    <!-- Diálogo de Historial de Estado -->
     <v-dialog v-model="historyDialog" max-width="600px">
       <v-card>
         <v-card-title>Historial de Estados</v-card-title>
@@ -87,7 +96,7 @@
       </v-card>
     </v-dialog>
 
-    <!-- Create Task Dialog -->
+    <!-- Diálogo de Creación de Tarea -->
     <v-dialog v-model="createTaskDialog" max-width="500px">
       <v-card>
         <v-card-title>Nueva tarea</v-card-title>
@@ -126,7 +135,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- Modify Task Dialog -->
+    <!-- Diálogo de Modificación de Tarea -->
     <v-dialog v-model="modifyTaskDialog" max-width="500px">
       <v-card>
         <v-card-title>Modificar tarea</v-card-title>
@@ -166,7 +175,7 @@
       </v-card>
     </v-dialog>
 
-    <!-- Confirm Delete Dialog -->
+    <!-- Diálogo de Confirmación de Eliminación -->
     <v-dialog v-model="confirmDeleteDialog" max-width="500px">
       <v-card>
         <v-card-title>Confirmar Eliminación</v-card-title>
@@ -178,7 +187,7 @@
       </v-card>
     </v-dialog>
 
-    <!-- Select Status Dialog --> 
+    <!-- Diálogo de Selección de Estado -->
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>Seleccionar estado</v-card-title>

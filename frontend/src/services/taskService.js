@@ -1,4 +1,4 @@
-import instance from "srcf/plugins/axios";
+import instance from "@/plugins/axios";
 import moment from "moment";
 
 export const fetchTasks = async () => {

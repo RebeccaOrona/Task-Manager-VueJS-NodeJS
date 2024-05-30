@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "serve": "node src/app.js"
+    "serve": "node srcb/app.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

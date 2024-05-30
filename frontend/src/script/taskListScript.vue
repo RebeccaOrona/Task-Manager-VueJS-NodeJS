@@ -81,19 +81,18 @@ export default {
         const shadeIndex = index % palindromicShades.length;
         return `#${palindromicShades[shadeIndex]}`;
       });
-      // return this.tasks.map((task, index) => {
-      //   const shadeIndex = index % palindromicShades.length;
-      //   return `#${palindromicShades[shadeIndex]}`;
-      // });
     },
   },
   methods: {
+    // Carga las tareas desde el servicio
     async loadTasks() {
       this.tasks = await fetchTasks();
     },
+    // Texto de paginación
     paginationText(pageStart, pageStop, itemsLength) {
       return `${pageStart} - ${pageStop} de ${itemsLength}`;
     },
+    // Mezcla un array
     shuffleArray(array) {
       let currentIndex = array.length, randomIndex;
       while (currentIndex != 0) {
@@ -104,6 +103,7 @@ export default {
       }
       return array;
     },
+    // Actualiza la diferencia de fechas de las tareas
     updateDateDiff() {
       this.tasks.forEach(task => {
         const created = moment(task.FechaCreacion);
@@ -113,12 +113,12 @@ export default {
         // Actualizar FechaCreacion
         task.FechaCreacion = `Hace ${this.getTimeDifference(created, now)}`;
 
-          // Actualizar FechaVencimiento
-          const timeLeft = deadline.isAfter(now) ? this.getTimeDifference(now, deadline) : this.getTimeDifference(deadline, now);
-          task.FechaVencimiento = deadline.isAfter(now) ? `En ${timeLeft}` : `Expiró hace ${timeLeft}`;
-        
+        // Actualizar FechaVencimiento
+        const timeLeft = deadline.isAfter(now) ? this.getTimeDifference(now, deadline) : this.getTimeDifference(deadline, now);
+        task.FechaVencimiento = deadline.isAfter(now) ? `En ${timeLeft}` : `Expiró hace ${timeLeft}`;
       });
     },
+    // Calcula la diferencia de tiempo entre dos fechas
     getTimeDifference(start, end) {
       const diffMinutes = end.diff(start, 'minutes');
       if (diffMinutes < 60) {
@@ -139,6 +139,7 @@ export default {
       const diffYears = end.diff(start, 'years');
       return `${diffYears} año${diffYears !== 1 ? 's' : ''}`;
     },
+    // Clase CSS según la fecha
     getDateClass(dateString) {
       if (dateString.includes('Expiró hace')) {
         return 'expired';
@@ -148,6 +149,7 @@ export default {
         return 'recent';
       }
     },
+    // Clase CSS según el estado
     getStatusClass(status) {
       switch(status) {
         case 'Completada':
@@ -160,11 +162,13 @@ export default {
           return '';
       }
     },
+    // Selecciona una tarea para editar su estado
     selectTask(task) {
       this.selectedTaskToEditStatus = task;
       this.selectedStatus = task.Estado;
       this.dialog = true;
     },
+    // Selecciona una tarea para modificar
     selectTaskForEdit(task) {
       this.selectedTaskToEdit = task;
       this.selectedTaskToEditId = task.id;
@@ -175,6 +179,7 @@ export default {
       this.selectedTaskToEditStatus = null;
       this.selectedStatus = '';
     },
+    // Actualiza el estado de la tarea
     async updateStatus() {
       if (!this.selectedTaskToEditStatus) return;
 
@@ -227,6 +232,7 @@ export default {
       this.newTask.FechaVencimiento = moment(date).format('DD/MM/YYYY');
       this.datePicker = false;
     },
+    // Crea una nueva tarea
     async createTask() {
       try {
         this.newTask.FechaVencimiento = moment(this.newTask.FechaVencimiento).toISOString();
@@ -259,6 +265,7 @@ export default {
       this.editTask.FechaVencimiento = moment(date).format('DD/MM/YYYY');
       this.editDatePicker = false;
     },
+    // Modifica una tarea existente
     async modifyTask() {
       try {
         console.log('editTask id: ', this.selectedTaskToEditId);
@@ -289,6 +296,7 @@ export default {
       this.confirmDeleteDialog = false;
       this.confirmedTaskId = null;
     },
+    // Elimina una tarea
     async deleteTask(taskId) {
       try {
         const response = await deleteTask(taskId);
@@ -304,6 +312,7 @@ export default {
         console.error('Error deleting task:', error);
       }
     },
+    // Obtiene el historial de estado de una tarea
     async fetchStatusHistory(taskId) {
       try {
         const response = await fetchStatusHistory(taskId);
@@ -315,6 +324,7 @@ export default {
         console.error('Error fetching status history:', error);
       }
     },
+    // Formatea una fecha para mostrar
     formatDate(dateString) {
       let date = moment(dateString);
       return date.format("DD MMMM YYYY, h:mm:ss a");

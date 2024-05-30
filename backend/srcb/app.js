@@ -13,6 +13,7 @@ import statusHistoryRouter from "./routes/statusHistory.router.js";
 
 const app = e();
 const PORT = process.env.PORT || 8080;
+// Inicializacion de Express
 const httpServer = http.createServer(app);
 // Inicializacion de Sequelize
 (async () => {
@@ -33,13 +34,16 @@ sequelize
     console.error("Error synchronizing the database:", err);
   });
 
+// Configurar el json para manejar los datos JSON
 app.use(e.json());
+// Configurar el cors para permitir el acceso a la API desde cualquier parte del mundo
 app.use(
   cors({
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
   })
 );
 
+// Configurar el static para el directorio public
 app.use(
   e.static(path.join(__dirname, "public"), {
     setHeaders: (res) => {
@@ -48,10 +52,10 @@ app.use(
   })
 );
 
+// Aplicar el cookie-parser para manejar las cookies
 app.use(cookieParser());
+// Inicializar el Passport
 initializePassport();
-
-// app.use(passport.initialize());
 
 // Configurar el router para /api/users
 app.use("/api/users", userRouter);
@@ -60,6 +64,7 @@ app.use("/api/tasks", taskRouter);
 // Configurar el router para /api/statusHistory
 app.use("/api/statusHistory", statusHistoryRouter);
 
+// Verificacion de inicializacion de la aplicacion
 httpServer.listen(PORT, () => {
   serverLogger.info(`Server is running on port ${PORT}`);
 });
